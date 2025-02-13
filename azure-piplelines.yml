@@ -1,0 +1,15 @@
+trigger:
+  - main
+
+pool:
+  name: Self-Hosted
+steps:
+  # Install wsl and ubunutu
+  - task: PowerShell@2
+    displayName: "nstall wsl and ubunutu"
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
+    inputs:
+      targetType: 'inline'
+      script: |
+        wsl --install -d Ubuntu
+        wsl -d Ubuntu -- bash -c "sudo apt updated && sudo apt install -y ansible"
