@@ -6,10 +6,16 @@ pool:
 steps:
   # Install wsl and ubunutu
   - task: PowerShell@2
-    displayName: "nstall wsl and ubunutu"
+    displayName: "Install wsl and ubunutu"
     condition: eq(variables['Agent.OS'], 'Windows_NT')
     inputs:
-      targetType: 'inline'
+      targetType: "inline"
       script: |
         wsl --install -d Ubuntu
         wsl -d Ubuntu -- bash -c "sudo apt updated && sudo apt install -y ansible"
+  - task: PowerShell@2
+    displayName: "Run Ansible"
+    inputs:
+      targetType: "inline"
+      script: |
+        wsl -d Ubuntu -- bash -c "ANSIBLE_HOST_KEY_CHECKING=FALSE ansible-playbook -i hosts.ini install-nginx.yml --extra-vars 'ansible_become_password=vikash@123456'"
